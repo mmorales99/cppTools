@@ -37,7 +37,7 @@ mandelbrot(
 	 	r = 10000; // valor a partir del cual se considera una funcion divergente no acotada
 	
 	pi = (xmax-xmin)/(xpixels -1); // cambiar el eje de coordenadas de cartesiano a fractalico, las coordenadas coinciden +-
-	qi = (ymax-ymin)/(ypixels-1);
+	qi = (ymax-ymin)/(ypixels -1);
 
 	for(p=0;p<xpixels;p++){					//////////////////////////////////////////////////////////////
 		for(q=0;q<ypixels;q++){				//	 Para toda la superficie real-imaginaria se prueba que 	//
@@ -50,7 +50,7 @@ mandelbrot(
 				y = 2*xx*yy+q0;				//	Calcular valor de C										//
 				xx = x;						//	++++++++++++++++++++++++++++++++++++++++++++++++++++++	//
 				yy = y;						//	++++++++++++++++++++++++++++++++++++++++++++++++++++++	//
-			if(x*x + y*y > r){				//	Si cumple que Z^2 + C^2 > CotaSuperior -> no es parte	//
+				if(x*x + y*y > r){			//	Si cumple que Z^2 + C^2 > CotaSuperior -> no es parte	//
 											//	de la conjetura											//
 					// añadir al set		//////////////////////////////////////////////////////////////
 					break;
