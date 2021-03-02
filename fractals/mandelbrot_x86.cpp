@@ -22,6 +22,7 @@ mandelbrot_x86(
 	int p,	// auxiliar
 		q,	// auxiliar
 	 	k,	// auxiliar
+		c = 2,
 	 	r = 10000; // valor a partir del cual se considera una funcion divergente no acotada
 	
 	pi = (xmax-xmin)/(xpixels -1); // cambiar el eje de coordenadas de cartesiano a fractalico, las coordenadas coinciden +-
@@ -34,52 +35,67 @@ mandelbrot_x86(
 		horiz:
 			verti:
 				// p0 = xmin + (p * pi)
-				move eax, 1;
-				fimul eax, p;
-				fimul eax, pi;
-				fadd p0, eax;
-				fadd p0, xmin;
+				mov EAX, 1;
+				fmul p;
+				fmul pi;
+				fadd p0;
+				mov EAX, xmin;
+				fadd p0;
+				mov p0, EAX;
 					
 				// q0 = ymin + (q * qi)
-				move eax, 1;
-				fimul eax, q;
-				fimul eax, qi;
-				fadd q0, eax;
-				fadd q0, ymin;
+				mov EAX, 1;
+				fmul q;
+				fmul qi;
+				fadd q0;
+				mov EAX, ymin;
+				fadd q0;
 				
-				move xx,0; // xx = 0
-				move yy,0; // yy = 0
+				mov xx,0; // xx = 0
+				mov yy,0; // yy = 0
 				
 				inter:
 					// x = xx*xx - yy*yy + p0 
-					fimul  xx,  xx;
-					fimul  yy,  yy;
-					move  x,  xx;
-					fsub  x,  yy;
-					fadd x, p0;
+					mov EAX, xx;
+					fmul  xx;
+					mov x, EAX;
+					mov EAX, yy;
+					fmul  yy;
+					mov EAX, x;
+					fsub  yy;
+					fadd p0;
+					mov x, EAX;
 
 					// y = 2*xx*yy + q0
-					fimul y,  xx;
-					fimul  y, yy;
-					fimul  y, 2;
-					fadd y,  q0;
+					mov EAX, y;
+					fmul xx;
+					fmul yy;
+					fmul c;
+					fadd q0;
+					mov y, EAX;
 					
 					// if x*x + y*y > r -> break
-					move  xx, x; // xx = x
-					move  yy, y; // yy = y
+					mov EAX, x;
+					mov xx, EAX; // xx = x
+					mov EAX, y;
+					mov yy, EAX; // yy = y
 
-					fimul x, x; // x*x
-					fimul y, y; // y*y
+					mov EAX, x;
+					fmul x; // x*x
+					mov x, EAX;
 
-					move eax, 0; // x** + y**
-					fadd eax, x;
-					fadd eax, y;
+					mov EAX, y;
+					fmul y; // y*y
+					mov y, EAX;
 
-					cmp eax, r; // if eax > r -> break
+					fadd x; // x** + y**
+
+					fcom r; // if EAX > r -> break
 					ja exit;
 
 				add k, 1;
-				cmp k, iteraciones; // k < iteraciones
+				mov EBX, k;
+				cmp EBX, iteraciones; // k < iteraciones
 				jb inter;
 			add q, 1;
 			cmp q, ypixels; // q < ypixels
